@@ -6,6 +6,7 @@ from train import train, train_KD
 from eval import test
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(device)
 
 train_loader, test_loader, classes = create_cifar10_dataloaders()
 
