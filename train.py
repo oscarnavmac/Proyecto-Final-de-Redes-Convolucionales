@@ -26,8 +26,6 @@ def train(model, train_loader, epochs, learning_rate, device):
 
         print(f"Epoch {epoch+1}/{epochs}, Loss: {running_loss / len(train_loader)}")
 
-    return model
-
         
 def train_KD(teacher, student, train_loader, epochs, learning_rate, T,
 soft_target_loss_weight, ce_loss_weight, device):
@@ -65,5 +63,3 @@ soft_target_loss_weight, ce_loss_weight, device):
             running_loss += loss.item()
 
         print(f"{epoch+1}/{epochs}, Loss: {running_loss / len(train_loader)}")
-
-    return student
