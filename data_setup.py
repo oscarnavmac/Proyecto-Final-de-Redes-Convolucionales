@@ -1,5 +1,5 @@
 import torch
-import torchvision
+import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 
 def create_cifar10_dataloaders(batch_size=4):
@@ -8,15 +8,13 @@ def create_cifar10_dataloaders(batch_size=4):
     [transforms.ToTensor(),
      transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-    train_dataset = torchvision.datasets.CIFAR10(root='./data', train=True,
+    train_dataset = datasets.CIFAR10(root='./data', train=True,
                                                 download=True, transform=transform)
-
-    test_dataset = torchvision.datasets.CIFAR10(root='./data', train=False,
+    test_dataset = datasets.CIFAR10(root='./data', train=False,
                                                 download=True, transform=transform)
 
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
                                             shuffle=True)
-
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size,
                                             shuffle=False)
 
