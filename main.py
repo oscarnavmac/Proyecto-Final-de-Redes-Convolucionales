@@ -5,6 +5,7 @@ from teacher_model import DeepNN
 from train import train, train_KD
 from eval import test
 import torchvision.transforms as transforms
+import torchvision.datasets as datasets
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Currently running on {device}")
