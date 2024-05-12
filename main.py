@@ -9,7 +9,7 @@ print(f"Currently running on {device}")
 
 train_loader, test_loader, classes = create_cifar10_dataloaders(batch_size=128)
 
-teacher = torch.hub.load("chenyaofo/pytorch-cifar-models", "cifar10_resnet20", pretrained=True)
+teacher = torch.hub.load("chenyaofo/pytorch-cifar-models", "cifar10_vgg16_bn", pretrained=True)
 total_params_teacher = "{:,}".format(sum(p.numel() for p in teacher.parameters()))
 print(f"vgg11 parameters: {total_params_teacher}")
 test_accuracy_deep = test(teacher, train_loader, device)
