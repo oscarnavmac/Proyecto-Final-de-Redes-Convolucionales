@@ -14,9 +14,9 @@ def create_cifar10_dataloaders(batch_size=4):
                                                 download=True, transform=transform)
 
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
-                                            shuffle=True)
+                                            shuffle=True, num_workers=2)
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size,
-                                            shuffle=False)
+                                            shuffle=False, num_workers=2)
 
     # Hard-coded classes
     classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
