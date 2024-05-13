@@ -24,12 +24,10 @@ class TinyVGG(nn.Module):
           nn.ReLU(),
           nn.Conv2d(16, 16, kernel_size=3),
           nn.ReLU(),
-          nn.MaxPool2d(2)
+          nn.MaxPool2d(kernel_size=2, stride=2)
       )
       self.classifier = nn.Sequential(
           nn.Flatten(),
-          # Where did this in_features shape come from? 
-          # It's because each layer of our network compresses and changes the shape of our inputs data.
           nn.Linear(in_features=16 * 5 * 5,
                     out_features=num_classes)
       )
