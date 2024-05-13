@@ -19,5 +19,14 @@ torch.manual_seed(42)
 student = LightNN(num_classes=10).to(device)
 total_params_student = "{:,}".format(sum(p.numel() for p in student.parameters()))
 print(f"student parameters: {total_params_student}")
-train_KD(teacher=teacher, student=student, train_loader=train_loader, epochs=10, learning_rate=0.001, T=2, soft_target_loss_weight=0.25, ce_loss_weight=0.75, device=device)
+train_KD(teacher=teacher, student=student, train_loader=train_loader, epochs=10,
+         learning_rate=0.001, T=2, alpha=0.75, device=device)
+test_accuracy_deep = test(student, test_loader, device)
+
+torch.manual_seed(42)
+student = TinyVGG(num_classes=10).to(device)
+total_params_student = "{:,}".format(sum(p.numel() for p in student.parameters()))
+print(f"student parameters: {total_params_student}")
+train_KD(teacher=teacher, student=student, train_loader=train_loader, epochs=10,
+         learning_rate=0.001, T=2, alpha=0.75, device=device)
 test_accuracy_deep = test(student, test_loader, device)
