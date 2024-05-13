@@ -48,19 +48,13 @@ def train_KD(teacher, student, train_loader, epochs, learning_rate, T, alpha, de
 
             student_logits = student(inputs)
 
-            #soft_targets = nn.functional.softmax(teacher_logits / T, dim=-1)
-            #soft_prob = nn.functional.log_softmax(student_logits / T, dim=-1)
-
             loss_fct = nn.KLDivLoss(reduction="batchmean")
             loss_kd = T**2 * loss_fct(
                     F.log_softmax(student_logits / T, dim=-1),
                     F.softmax(teacher_logits / T, dim=-1))
-            
-            #loss_kd = torch.sum(soft_targets * (soft_targets.log() - soft_prob)) / soft_prob.size()[0] * (T**2)
 
             loss_ce = CELoss(student_logits, labels)
 
-            #loss = soft_target_loss_weight * soft_target_loss + ce_loss_weight * label_loss
             loss = alpha * loss_ce + (1. - alpha) * loss_kd
 
             loss.backward()
