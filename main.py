@@ -25,6 +25,6 @@ test_accuracy_deep = test(student1, test_loader, device)
 torch.manual_seed(42)
 student2 = TinyVGG(num_classes=10).to(device)
 print(f"student parameters: {total_params_student}")
-train(teacher=teacher, student=student2, train_loader=train_loader, epochs=10,
+train_KD(teacher=teacher, student=student2, train_loader=train_loader, epochs=10,
          learning_rate=0.001, T=2, alpha=0.75, device=device)
 test_accuracy_deep = test(student2, test_loader, device)
