@@ -16,17 +16,16 @@ print(f"vgg11 parameters: {total_params_teacher}")
 test_accuracy_deep = test(teacher, test_loader, device)
 
 torch.manual_seed(42)
-student = LightNN(num_classes=10).to(device)
-total_params_student = "{:,}".format(sum(p.numel() for p in student.parameters()))
+student1 = TinyVGG(num_classes=10).to(device)
+total_params_student = "{:,}".format(sum(p.numel() for p in student1.parameters()))
 print(f"student parameters: {total_params_student}")
-train_KD(teacher=teacher, student=student, train_loader=train_loader, epochs=10,
-         learning_rate=0.001, T=2, alpha=0.75, device=device)
-test_accuracy_deep = test(student, test_loader, device)
+train_KD(teacher=teacher, student=student1, train_loader=train_loader, epochs=10,
+         learning_rate=0.001, T=2, alpha=0.5, device=device)
+test_accuracy_deep = test(student1, test_loader, device)
 
 torch.manual_seed(42)
-student = TinyVGG(num_classes=10).to(device)
-total_params_student = "{:,}".format(sum(p.numel() for p in student.parameters()))
+student2 = TinyVGG(num_classes=10).to(device)
 print(f"student parameters: {total_params_student}")
-train_KD(teacher=teacher, student=student, train_loader=train_loader, epochs=10,
+train_KD(teacher=teacher, student=student2, train_loader=train_loader, epochs=10,
          learning_rate=0.001, T=2, alpha=0.75, device=device)
-test_accuracy_deep = test(student, test_loader, device)
+test_accuracy_deep = test(student2, test_loader, device)
