@@ -19,12 +19,12 @@ torch.manual_seed(42)
 student1 = TinyVGG(num_classes=10).to(device)
 total_params_student = "{:,}".format(sum(p.numel() for p in student1.parameters()))
 print(f"student parameters: {total_params_student}")
-train(student1, train_loader, epochs=30, learning_rate=0.001, device=device)
+train(student1, train_loader, epochs=100, learning_rate=0.001, device=device)
 test_accuracy_deep = test(student1, test_loader, device)
 
 torch.manual_seed(42)
 student2 = TinyVGG(num_classes=10).to(device)
 print(f"student parameters: {total_params_student}")
-train_KD(teacher=teacher, student=student2, train_loader=train_loader, epochs=30,
+train_KD(teacher=teacher, student=student2, train_loader=train_loader, epochs=100,
          learning_rate=0.001, T=5, alpha=0.9, device=device)
 test_accuracy_deep = test(student2, test_loader, device)
