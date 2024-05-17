@@ -20,7 +20,7 @@ torch.manual_seed(42)
 tiny = TinyVGG(num_classes=10).to(device)
 total_params_tiny = "{:,}".format(sum(p.numel() for p in tiny.parameters()))
 print(f"tiny model parameters: {total_params_tiny}")
-train_losses = train(tiny, train_loader, epochs=100, learning_rate=0.001, device=device)
+train_losses = train(tiny, train_loader, epochs=40, learning_rate=0.001, device=device)
 test_accuracy_deep = test(tiny, test_loader, device)
 
 plt.figure(figsize=(10, 5))
@@ -35,7 +35,7 @@ plt.show()
 torch.manual_seed(42)
 student = TinyVGG(num_classes=10).to(device)
 print(f"student parameters: {total_params_tiny}")
-kd_losses = train_KD(teacher=teacher, student=student, train_loader=train_loader, epochs=100,
+kd_losses = train_KD(teacher=teacher, student=student, train_loader=train_loader, epochs=40,
          learning_rate=0.001, T=5, alpha=0.9, device=device)
 test_accuracy_deep = test(student, test_loader, device)
 
