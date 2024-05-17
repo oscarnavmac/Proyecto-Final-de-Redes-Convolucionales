@@ -4,6 +4,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 
 def train(model, train_loader, epochs, learning_rate, device):
+    train_losses = []
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -25,11 +26,16 @@ def train(model, train_loader, epochs, learning_rate, device):
 
             running_loss += loss.item()
 
-        print(f"Epoch {epoch+1}/{epochs}, Loss: {running_loss / len(train_loader)}")
+        epoch_loss = running_loss / len(train_loader)
+        train_losses.append(epoch_loss)
+
+        print(f"Epoch {epoch+1}/{epochs}, Loss: {epoch_loss}")
+
+    return train_losses
 
         
 def train_KD(teacher, student, train_loader, epochs, learning_rate, T, alpha, device):
-    
+    train_losses = []
     CELoss = nn.CrossEntropyLoss()
     optimizer = optim.Adam(student.parameters(), lr=learning_rate)
 
@@ -62,4 +68,9 @@ def train_KD(teacher, student, train_loader, epochs, learning_rate, T, alpha, de
 
             running_loss += loss.item()
 
-        print(f"{epoch+1}/{epochs}, Loss: {running_loss / len(train_loader)}")
+        epoch_loss = running_loss / len(train_loader)
+        train_losses.append(epoch_loss)
+
+        print(f"{epoch+1}/{epochs}, Loss: {epoch_loss}")
+
+    return train_losses
