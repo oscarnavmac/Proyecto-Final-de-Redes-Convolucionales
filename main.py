@@ -1,4 +1,5 @@
 import torch
+import matplotlib.pyplot as plt
 from data_setup import create_cifar10_dataloaders
 from student_model import LightNN
 from train import train, train_KD
@@ -16,15 +17,33 @@ print(f"vgg16 parameters: {total_params_teacher}")
 test_accuracy_deep = test(teacher, test_loader, device)
 
 torch.manual_seed(42)
-student1 = TinyVGG(num_classes=10).to(device)
-total_params_student = "{:,}".format(sum(p.numel() for p in student1.parameters()))
-print(f"student parameters: {total_params_student}")
-train(student1, train_loader, epochs=100, learning_rate=0.001, device=device)
-test_accuracy_deep = test(student1, test_loader, device)
+tiny = TinyVGG(num_classes=10).to(device)
+total_params_tiny = "{:,}".format(sum(p.numel() for p in tiny.parameters()))
+print(f"tiny model parameters: {total_params_tiny}")
+train_losses = train(tiny, train_loader, epochs=100, learning_rate=0.001, device=device)
+test_accuracy_deep = test(tiny, test_loader, device)
+
+plt.figure(figsize=(10, 5))
+plt.plot(train_losses, label='Training Loss')
+#plt.plot(val_losses, label='Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.title('Training and Validation Loss')
+plt.legend()
+plt.show()
 
 torch.manual_seed(42)
-student2 = TinyVGG(num_classes=10).to(device)
-print(f"student parameters: {total_params_student}")
-train_KD(teacher=teacher, student=student2, train_loader=train_loader, epochs=100,
+student = TinyVGG(num_classes=10).to(device)
+print(f"student parameters: {total_params_tiny}")
+kd_losses = train_KD(teacher=teacher, student=student, train_loader=train_loader, epochs=100,
          learning_rate=0.001, T=5, alpha=0.9, device=device)
-test_accuracy_deep = test(student2, test_loader, device)
+test_accuracy_deep = test(student, test_loader, device)
+
+plt.figure(figsize=(10, 5))
+plt.plot(kd_losses, label='Training Loss')
+#plt.plot(val_losses, label='Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.title('Training and Validation Loss')
+plt.legend()
+plt.show()
