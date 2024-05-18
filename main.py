@@ -9,7 +9,8 @@ from model import TinyVGG
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Currently running on {device}")
 
-train_loader, test_loader, classes = create_cifar10_dataloaders(batch_size=128)
+train_loader, valid_loader, test_loader, classes = create_cifar10_dataloaders(valid_split=0.1,
+                                                                              batch_size=256)
 
 teacher = torch.hub.load("chenyaofo/pytorch-cifar-models", "cifar10_vgg16_bn", pretrained=True)
 total_params_teacher = "{:,}".format(sum(p.numel() for p in teacher.parameters()))

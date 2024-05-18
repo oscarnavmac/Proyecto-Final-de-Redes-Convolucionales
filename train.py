@@ -2,8 +2,9 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+from eval import validate
 
-def train(model, train_loader, epochs, learning_rate, device):
+def train(model, train_loader, valid_loader, epochs, learning_rate, device):
     train_losses = []
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
@@ -29,12 +30,15 @@ def train(model, train_loader, epochs, learning_rate, device):
         epoch_loss = running_loss / len(train_loader)
         train_losses.append(epoch_loss)
 
-        print(f"Epoch {epoch+1}/{epochs}, Loss: {epoch_loss}")
+        valid_accuracy = validate(model, valid_loader, criterion, device)
+
+        print(f"Epoch {epoch+1}/{epochs}, Loss: {epoch_loss},  Valid Acc: {valid_accuracy:.2f}%")
 
     return train_losses
 
         
-def train_KD(teacher, student, train_loader, epochs, learning_rate, T, alpha, device):
+def train_KD(teacher, student, train_loader, valid_loader, epochs, learning_rate, 
+             Temperature, alpha, device):
     train_losses = []
     CELoss = nn.CrossEntropyLoss()
     optimizer = optim.Adam(student.parameters(), lr=learning_rate)
@@ -53,15 +57,13 @@ def train_KD(teacher, student, train_loader, epochs, learning_rate, T, alpha, de
                 teacher_logits = teacher(inputs)
 
             student_logits = student(inputs)
+            
+            distill_loss = CELoss(F.softmax(student_logits / Temperature, dim=-1),
+                              F.softmax(teacher_logits / Temperature, dim=-1))
 
-            loss_fct = nn.KLDivLoss(reduction="batchmean")
-            loss_kd = T**2 * loss_fct(
-                    F.log_softmax(student_logits / T, dim=-1),
-                    F.softmax(teacher_logits / T, dim=-1))
+            student_loss = CELoss(student_logits, labels)
 
-            loss_ce = CELoss(student_logits, labels)
-
-            loss = alpha * loss_ce + (1. - alpha) * loss_kd
+            loss = alpha*student_loss + (1. - alpha)*distill_loss
 
             loss.backward()
             optimizer.step()
@@ -71,6 +73,7 @@ def train_KD(teacher, student, train_loader, epochs, learning_rate, T, alpha, de
         epoch_loss = running_loss / len(train_loader)
         train_losses.append(epoch_loss)
 
-        print(f"{epoch+1}/{epochs}, Loss: {epoch_loss}")
+        valid_accuracy = validate(model, valid_loader, CELoss, device)
+        print(f"{epoch+1}/{epochs}, Loss: {epoch_loss}, Valid Acc: {valid_accuracy:.2f}%")
 
     return train_losses
