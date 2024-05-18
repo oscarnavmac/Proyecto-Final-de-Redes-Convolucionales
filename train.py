@@ -73,7 +73,7 @@ def train_KD(teacher, student, train_loader, valid_loader, epochs, learning_rate
         epoch_loss = running_loss / len(train_loader)
         train_losses.append(epoch_loss)
 
-        valid_accuracy = validate(model, valid_loader, CELoss, device)
+        valid_accuracy = validate(student, valid_loader, CELoss, device)
         print(f"{epoch+1}/{epochs}, Loss: {epoch_loss}, Valid Acc: {valid_accuracy:.2f}%")
 
     return train_losses
