@@ -20,11 +20,11 @@ def create_cifar10_dataloaders(valid_split, batch_size=128):
     train_dataset, valid_dataset = random_split(dataset, [train_size, val_size])
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size,
-                                        shuffle=True, num_workers=0)
+                                        shuffle=True, num_workers=4)
     valid_loader = DataLoader(valid_dataset, batch_size=batch_size,
-                                        shuffle=False, num_workers=0)
+                                        shuffle=False, num_workers=4)
     test_loader = DataLoader(test_dataset, batch_size=batch_size,
-                                        shuffle=False, num_workers=0)
+                                        shuffle=False, num_workers=4)
 
     # Hard-coded classes
     classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')

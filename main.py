@@ -37,7 +37,7 @@ torch.manual_seed(42)
 student = TinyVGG(num_classes=10).to(device)
 print(f"student parameters: {total_params_tiny}")
 kd_losses = train_KD(teacher, student, train_loader, valid_loader, epochs=30, 
-                     learning_rate=0.01, T=2, alpha=0.5, device=device)
+                     learning_rate=0.01, Temperature=2, alpha=0.5, device=device)
 test_accuracy_distill = test(student, test_loader, device)
 
 plt.figure(figsize=(10, 5))
