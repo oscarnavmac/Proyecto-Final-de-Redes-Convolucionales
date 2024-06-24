@@ -8,4 +8,4 @@ A total of 4 different architectures were used, and the versions that used disti
 
 All models were trained for 50 epochs using SGD with a momentum of 0.9, as well as a scheduler to adjust the learning rate during training to avoid overfitting. Models that did not use distillation were trained with an initial learning rate of 0.01, while distillates used 0.1, temperature of 8 and a w_1=w_2=0.5. 
 
-The following graph shows the total accuracies of each model.
+The following graph shows the total accuracies of each model..
